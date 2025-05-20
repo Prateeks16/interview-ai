@@ -44,11 +44,10 @@ def extract_text_from_resume(filename: str, file_bytes: bytes) -> Tuple[str, Opt
         return "",
 
 # --- Basic Section Extraction ---
-# This can be improved significantly with more robust regex or NLP techniques
+
 def extract_sections_from_text(text: str) -> dict:
     sections = {}
-    # Keywords that might indicate the start of a section (case-insensitive)
-    # Order matters if sections can be nested or have ambiguous headers
+   
     section_keywords = {
         "experience": r"(?i)(?:work|professional)\s*experience|employment\s*history|career\s*summary",
         "education": r"(?i)education|academic\s*background",
@@ -84,8 +83,7 @@ def extract_sections_from_text(text: str) -> dict:
         section_content = text[header_end_pos:end_pos].strip()
         
         # If multiple "experience" sections are found, append them or handle as needed
-        # For simplicity, this will overwrite if the same key is found (e.g. two "SKILLS" headers)
-        # A better approach might be to collect all content under similar keys.
+       
         if current_kw["key"] in sections and section_content:
              sections[current_kw["key"]] += "\n" + section_content
         elif section_content:

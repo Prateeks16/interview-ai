@@ -62,10 +62,8 @@ def extract_entities_from_text(text: str, sections: Optional[Dict[str, str]] = N
             # Process the whole text or specific sections if provided
             text_to_process = sections.get("skills", "") + "\n" + sections.get("experience", text) if sections else text
             
-            # Chunking text if it's too long for the NER model
-            # Most NER models have a token limit (e.g., 512 tokens)
-            # This is a simple split by sentence, more robust chunking might be needed.
-            max_chunk_length = 400 # A bit less than 512 to be safe with tokenization
+        
+            max_chunk_length = 400 
             chunks = []
             if len(text_to_process.split()) > max_chunk_length:
                 current_chunk = ""
@@ -91,10 +89,8 @@ def extract_entities_from_text(text: str, sections: Optional[Dict[str, str]] = N
                 word = entity.get("word", "").strip()
                 if not word: continue
 
-                # Crude mapping of NER labels to our categories
-                # This depends heavily on the NER model's label scheme (e.g., MISC, ORG, LOC, PER)
-                # 'elastic/distilbert-base-uncased-finetuned-conll03-english' uses B-MISC, I-MISC etc.
-                # 'simple' aggregation strategy gives cleaned words.
+                
+               
                 if entity_group in ["ORG", "NORP"]: # NORP is nationalities or religious or political groups
                     extracted_data["organizations"].append(word)
                 elif entity_group in ["LOC", "GPE"]: # GPE is Geo-Political Entity
@@ -118,10 +114,10 @@ def extract_entities_from_text(text: str, sections: Optional[Dict[str, str]] = N
             # Fallback to keyword matching if NER fails or gives no skills
 
     # 2. Keyword-based skill extraction (augment or fallback)
-    # This is a simple version. Can be improved.
-    # Particularly useful if NER model isn't fine-tuned for technical skills.
+    
     
     # Process text from 'skills' section first if available, then whole text
+
     text_for_skill_keywords = sections.get("skills", "").lower() if sections else ""
     if not text_for_skill_keywords or len(extracted_data["skills"]) < 5 : # If skill section is empty or few skills found
         text_for_skill_keywords += "\n" + text.lower() # Add whole resume text
@@ -139,7 +135,7 @@ def extract_entities_from_text(text: str, sections: Optional[Dict[str, str]] = N
     extracted_data["skills"] = sorted(list(found_keyword_skills))
 
 
-    # Rudimentary experience keyword extraction (e.g., from 'experience' section)
+    # Rudimentary experience keyword extraction
     if sections and "experience" in sections:
         experience_text = sections["experience"].lower()
         exp_keywords = set()

@@ -1,5 +1,5 @@
 from fastapi import FastAPI, APIRouter, HTTPException, UploadFile, File, Form, Depends
-from fastapi.middleware.cors import CORSMiddleware # If you plan to have a separate frontend
+from fastapi.middleware.cors import CORSMiddleware 
 from pathlib import Path
 import logging
 import os
@@ -11,9 +11,9 @@ from .services import (
     entity_extractor,
     role_matcher,
     question_generator,
-    transcription_service, # Stub
-    video_analysis_service, # Stub
-    feedback_service # Stub
+    transcription_service, 
+    video_analysis_service, 
+    feedback_service 
 )
 from .utils import file_handling
 from .api import routes as api_routes # Import the routes
@@ -43,19 +43,6 @@ app = FastAPI(
     },
 )
 
-# --- CORS Middleware (Uncomment and configure if your frontend is on a different domain/port) ---
-# origins = [
-#     "http://localhost",         # Allow local development
-#     "http://localhost:3000",    # Example for a React frontend
-#     # Add your frontend production domain here
-# ]
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=origins,
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
 
 
 # --- Include Routers ---
@@ -73,7 +60,7 @@ async def read_root():
         "documentation_redoc": "/redoc"
         }
 
-# --- Lifecycle Events (Optional - e.g., for loading models at startup) ---
+# --- Lifecycle Events  ---
 @app.on_event("startup")
 async def startup_event():
     logger.info("Application startup: Initializing resources...")
@@ -82,11 +69,7 @@ async def startup_event():
     entity_extractor.get_ner_pipeline()
     logger.info("Attempting to pre-load Sentence Transformer model...")
     role_matcher.get_sentence_transformer_model()
-    logger.info("Attempting to pre-load T5 Question Generation model...") # New
-    question_generator.preload_llm_models() # New
-    logger.info("Model pre-loading attempts complete.")
-    logger.info("Application startup complete.")
-
-# If you decide to put more complex logic or many more routes,
-# consider splitting them into more files under the 'api' directory
-# and including their routers here in main.py.
+    # logger.info("Attempting to pre-load T5 Question Generation model...") 
+    # question_generator.preload_llm_models() # New
+    # logger.info("Model pre-loading attempts complete.")
+    # logger.info("Application startup complete.")

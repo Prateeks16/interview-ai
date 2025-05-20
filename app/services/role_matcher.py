@@ -83,6 +83,5 @@ def compare_skills(
 
     matched = sorted(list(resume_skills_set.intersection(jd_skills_set)))
     missing_from_jd = sorted(list(jd_skills_set.difference(resume_skills_set)))
-    # resume_only = sorted(list(resume_skills_set.difference(jd_skills_set)))
-    
+
     return matched, missing_from_jd #, resume_only
